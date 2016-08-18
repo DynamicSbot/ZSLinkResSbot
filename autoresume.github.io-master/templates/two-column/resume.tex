@@ -1,0 +1,169 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Two Column One Page Curriculum Vitae
+% LaTeX Template
+% Version 1.1 (24/1/13)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Alessandro (The CV Inn)
+%
+% IMPORTANT: THIS TEMPLATE NEEDS TO BE COMPILED WITH XeLaTeX
+%
+% This template uses several fonts not included with Windows/Linux by
+% default. If you get compilation errors saying a font is missing, find the line
+% on which the font is used and either change it to a font included with your
+% operating system or comment the line out to use the default font.
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[10pt]{article} % Font size - 10pt, 11pt or 12pt
+
+\usepackage[hmargin=1.25cm, vmargin=1.5cm]{geometry} % Document margins
+
+\usepackage{marvosym} % Required for symbols in the colored box
+\usepackage{ifsym} % Required for symbols in the colored box
+
+\usepackage[usenames,dvipsnames]{xcolor} % Allows the definition of hex colors
+
+% Fonts and tweaks for XeLaTeX
+\usepackage{fontspec,xltxtra,xunicode}
+\defaultfontfeatures{Mapping=tex-text}
+\setromanfont[Mapping=tex-text]{Droid Serif} % Main document font
+\setsansfont[Scale=MatchLowercase,Mapping=tex-text]{Droid Sans} % Font for your name at the top
+%\setmonofont[Scale=MatchLowercase]{Andale Mono}
+
+% Colors for links, text and headings
+\usepackage{hyperref}
+\definecolor{linkcolor}{HTML}{506266} % Blue-gray color for links
+\definecolor{shade}{HTML}{F5DD9D} % Peach color for the contact information box
+\definecolor{text1}{HTML}{2b2b2b} % Main document font color, off-black
+\definecolor{headings}{HTML}{701112} % Dark red color for headings
+% Other color palettes: shade=B9D7D9 and linkcolor=A40000; shade=D4D7FE and linkcolor=FF0080
+
+\hypersetup{colorlinks,breaklinks, urlcolor=linkcolor, linkcolor=linkcolor} % Set up links and colors
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+% Headers and footers can be added with the \lhead{} \rhead{} \lfoot{} \rfoot{} commands
+% Example footer:
+%\rfoot{\color{headings} {\sffamily Last update: \today}. Typeset with Xe\LaTeX}
+
+\renewcommand{\headrulewidth}{0pt} % Get rid of the default rule in the header
+
+\usepackage{titlesec} % Allows creating custom \section's
+
+% Format of the section titles
+\titleformat{\section}{\color{headings}
+\scshape\Large\raggedright}{}{0em}{}[\color{black}\titlerule]
+
+\titlespacing{\section}{0pt}{0pt}{5pt} % Spacing around titles
+
+\begin{document}
+
+\color{text1} % Sets the default text color for the whole document to the color defined as 'text1'
+
+%----------------------------------------------------------------------------------------
+%	TITLE
+%----------------------------------------------------------------------------------------
+
+\par{\centering{\sffamily\Huge {{=it.firstName}} {{=it.lastName}} }\\ % Your name
+\vspace{20pt}
+	
+%----------------------------------------------------------------------------------------
+
+\begin{minipage}[t]{0.5\textwidth} % Start the left-hand side of the page
+\vspace{0pt} % Trick for alignment
+	
+%----------------------------------------------------------------------------------------
+%	WORK EXPERIENCE
+%----------------------------------------------------------------------------------------
+
+\section{Summary} 
+\normalsize{ {{=AR.LatexText(it.summary)}} }\\
+
+
+{{?it.positions && it.positions._total > 0}}
+\section{Work Experience} 
+
+{{~it.positions.values :position:index}}
+{\raggedleft\textsc{ {{? position.isCurrent}}Current, from {{=AR.renderDate(position.startDate)}}{{??}}{{=AR.renderDate(position.startDate)}} -- {{=AR.renderDate(position.endDate)}}{{?}} }\par}
+
+{\raggedright\large {{=position.company.name}} \\
+\textit{ {{=position.title}} }\\[5pt]}
+
+\normalsize{ {{=AR.LatexText(position.summary)}} }\\
+{{~}}
+{{?}}
+%----------------------------------------------------------------------------------------
+
+
+\end{minipage} % End the left-hand side of the page
+\hfill
+\begin{minipage}[t]{0.44\textwidth} % Start the right-hand side of the page
+\vspace{0pt} % Trick for alignment
+
+%----------------------------------------------------------------------------------------
+%	COLORED BOX
+%----------------------------------------------------------------------------------------
+
+\colorbox{shade}{\textcolor{text1}{
+\begin{tabular}{c|p{7cm}}
+\raisebox{-4pt}{\textifsymbol{18}} & {{=it.mainAddress}} \\ % Address
+\raisebox{-3pt}{\Mobilefone} & {{=AR.getPhone(it.phoneNumbers.values)}} \\ % Phone number
+\raisebox{-1pt}{\Letter} & \href{mailto:{{=it.emailAddress}} }{ {{=it.emailAddress}} } \\ % Email address
+{{? it.memberUrlResources.values && it.memberUrlResources.values.length > 0}}\Keyboard & \href{ {{=it.memberUrlResources.values[0].url}} }{ {{=it.memberUrlResources.values[0].url}} } \\ % Website 
+{{?}}\end{tabular}
+}
+}\\[10pt]
+
+%----------------------------------------------------------------------------------------
+%	EDUCATION
+%----------------------------------------------------------------------------------------
+
+\section{Education} 
+
+\begin{tabular}{rl} % Start a table with two columns, one for dates and one for qualifications
+
+{{~it.educations.values :education:index}}
+{{=AR.renderDate(education.startDate)}} -- \textsc{ {{=AR.renderDate(education.endDate)}} } & \textbf{ {{=education.degree}} } \\ 
+& \textsc{{{=education.fieldOfStudy}}} \\ 
+& \textit{{{=education.schoolName}}}\\
+&\\
+{{~}}
+	
+%----------------------------------------------------------------------------------------
+
+\end{tabular}\\[10pt]
+
+%----------------------------------------------------------------------------------------
+%	AWARDS
+%----------------------------------------------------------------------------------------
+
+{{?it.honorsAwards && it.honorsAwards.values}}
+\section{Awards} 
+
+{{~it.honorsAwards.values :honor:index}}
+\textbf{{{=honor.name}}} & \textit{{{=honor.issuer}}}\\
+{{~}}
+{{?}}
+
+%----------------------------------------------------------------------------------------
+%	SKILLS
+%----------------------------------------------------------------------------------------
+
+{{?it.skills && it.skills.values}}
+\section{Skills} 
+\textit{ {{~it.skills.values :skill:index}}{{?index===0}}{{=skill.skill.name}}{{??}}, {{=skill.skill.name}}{{?}}{{~}} }
+{{?}}
+
+	
+\end{minipage} % End right-hand side of the page
+
+\end{document}  
